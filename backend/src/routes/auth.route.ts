@@ -1,5 +1,15 @@
 import { Hono } from "hono";
 
-const router = new Hono();
+const authRoutes = new Hono();
 
-export default router;
+authRoutes.post("/signup", (c) => {
+  return c.text("signup route");
+});
+authRoutes.post("/login", (c) => {
+  return c.text("login route");
+});
+authRoutes.post("/logout", (c) => {
+  return c.text("logout route");
+});
+
+export default authRoutes;

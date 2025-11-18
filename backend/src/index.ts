@@ -1,10 +1,10 @@
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
-import authRoute from "./routes/auth.route.js";
+import authRoutes from "./routes/auth.route.js";
 
-const app = new Hono();
+const app = new Hono().basePath("/api");
 
-app.route("/api/auth", authRoute);
+app.route("/auth", authRoutes);
 
 app.get("/", (c) => {
   return c.text("Hello Hono!");
