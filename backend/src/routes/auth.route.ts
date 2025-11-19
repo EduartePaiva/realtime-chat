@@ -8,7 +8,7 @@ import { generateJwtToken, saveJwtCookie } from "../lib/utils.js";
 const authRoutes = new Hono();
 
 const signupSchema = z.object({
-  fullName: z.string(),
+  fullName: z.string().min(1),
   email: z.email(),
   password: z.string().min(6),
 });
@@ -24,13 +24,13 @@ authRoutes.post("/signup", zValidator("json", signupSchema), async (c) => {
     const salt = await bcrypt.genSalt();
     const hashedPass = await bcrypt.hash(password, salt);
 
-    const newUser = new User({ password, fullName, email });
+    const newUser = new User({ password: hashedPass, fullName, email });
     await newUser.save();
 
     const jwtToken = generateJwtToken(newUser._id.toHexString(), process.env.JWT_SECRET!);
     saveJwtCookie(c, jwtToken);
 
-    c.json(
+    return c.json(
       {
         _id: newUser._id.toHexString(),
         fullName: newUser.fullName,
