@@ -3,11 +3,10 @@ import { Hono } from "hono";
 import z from "zod";
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
-import { generateJwtToken, saveJwtCookie } from "../lib/utils.js";
+import { deleteJwtCookie, generateJwtToken, saveJwtCookie } from "../lib/utils.js";
+import { protectRoute } from "../middleware/auth.middleware.js";
 
 const authRoutes = new Hono();
-
-const JWT_SECRET = process.env.JWT_SECRET!;
 
 const signupSchema = z.object({
   fullName: z.string().min(1),
@@ -17,6 +16,7 @@ const signupSchema = z.object({
 
 authRoutes.post("/signup", zValidator("json", signupSchema), async (c) => {
   const { email, fullName, password } = c.req.valid("json");
+  const JWT_SECRET = process.env.JWT_SECRET!;
 
   try {
     const res = await User.findOne({ email: email });
@@ -55,6 +55,7 @@ const loginSchema = z.object({
 
 authRoutes.post("/login", zValidator("json", loginSchema), async (c) => {
   const { email, password } = c.req.valid("json");
+  const JWT_SECRET = process.env.JWT_SECRET!;
 
   try {
     const user = await User.findOne({ email: email }).exec();
@@ -63,22 +64,53 @@ authRoutes.post("/login", zValidator("json", loginSchema), async (c) => {
     }
 
     const isPasswordRight = await bcrypt.compare(password, user.password);
-
     if (!isPasswordRight) {
       return c.json({ message: "Invalid email or password" }, 401);
     }
-
+    console.log(JWT_SECRET);
+    console.log(process.env.JWT_SECRET);
     const jwtToken = generateJwtToken(user.id, JWT_SECRET);
+    saveJwtCookie(c, jwtToken);
 
-    return c.json({ token: jwtToken }, 201);
+    return c.json(
+      {
+        _id: user._id.toHexString(),
+        fullName: user.fullName,
+        email: user.email,
+        profilePic: user.profilePic,
+      },
+      201
+    );
   } catch (error) {
     console.error(error);
 
     return c.json({ message: "Internal server error" }, 500);
   }
 });
+
 authRoutes.post("/logout", (c) => {
-  return c.text("logout route");
+  try {
+    deleteJwtCookie(c);
+    return c.json({ message: "Logged out successfully" }, 200);
+  } catch (error) {
+    console.error("Error in logout", error);
+    return c.json({ message: "Internal Server Error" }, 500);
+  }
+});
+
+authRoutes.get("/update-profile", protectRoute, async (c) => {
+  const userID = c.var.userID;
+  const newProfileLink = "testes";
+
+  try {
+    const user = await User.findByIdAndUpdate(userID, { profilePic: newProfileLink });
+
+    if (!user) {
+      return c.json({ message: "User not found" }, 404);
+    }
+  } catch (error) {}
+
+  return c.text("teste");
 });
 
 export default authRoutes;
