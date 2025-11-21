@@ -5,6 +5,7 @@ import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import { deleteJwtCookie, generateJwtToken, saveJwtCookie } from "../lib/utils.js";
 import { protectRoute } from "../middleware/auth.middleware.js";
+import cloudinary from "../lib/cloudinary.js";
 
 const authRoutes = new Hono();
 
@@ -98,19 +99,35 @@ authRoutes.post("/logout", (c) => {
   }
 });
 
-authRoutes.get("/update-profile", protectRoute, async (c) => {
-  const userID = c.var.userID;
-  const newProfileLink = "testes";
-
-  try {
-    const user = await User.findByIdAndUpdate(userID, { profilePic: newProfileLink });
-
-    if (!user) {
-      return c.json({ message: "User not found" }, 404);
-    }
-  } catch (error) {}
-
-  return c.text("teste");
+const updateProfileSchema = z.object({
+  profilePic: z.base64url(),
 });
+
+authRoutes.get(
+  "/update-profile",
+  protectRoute,
+  zValidator("json", updateProfileSchema),
+  async (c) => {
+    const { userID } = c.var.user;
+    const { profilePic } = c.req.valid("json");
+
+    try {
+      const uploadResponse = await cloudinary.uploader.upload(profilePic);
+
+      const updatedUser = await User.findByIdAndUpdate(
+        userID,
+        {
+          profilePic: uploadResponse.secure_url,
+        },
+        { new: true }
+      );
+
+      c.json(updatedUser, 200);
+    } catch (error) {
+      console.log("error in update profile: ", error);
+      return c.json({ message: "Internal Server Error" }, 500);
+    }
+  }
+);
 
 export default authRoutes;
