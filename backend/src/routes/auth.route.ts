@@ -130,4 +130,8 @@ authRoutes.get(
   }
 );
 
+authRoutes.get("/check", protectRoute, (c) => {
+  return c.json({ ...c.get("user") }, 200);
+});
+
 export default authRoutes;
