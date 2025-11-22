@@ -4,12 +4,24 @@ import dotenv from "dotenv";
 import authRoutes from "./routes/auth.route.js";
 import { connectDB } from "./lib/db.js";
 import messageRoutes from "./routes/message.route.js";
+import { cors } from "hono/cors";
 
 dotenv.config();
 
 const PORT = process.env.PORT!;
 
 const app = new Hono().basePath("/api");
+
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    allowHeaders: ["X-Custom-Header", "Upgrade-Insecure-Requests"],
+    allowMethods: ["POST", "GET", "OPTIONS"],
+    exposeHeaders: ["Content-Length", "X-Kuma-Revision"],
+    maxAge: 600,
+    credentials: true,
+  })
+);
 
 app.route("/auth", authRoutes);
 app.route("/message", messageRoutes);
