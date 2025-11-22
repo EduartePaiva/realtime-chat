@@ -8,6 +8,7 @@ type AuthStore = {
   isUpdatingProfile: boolean;
   isCheckingAuth: boolean;
   checkAuth: () => Promise<void>;
+  signup: () => Promise<void>;
 };
 
 export const useAuthStore = create<AuthStore>((set) => ({
@@ -27,4 +28,5 @@ export const useAuthStore = create<AuthStore>((set) => ({
       set({ isCheckingAuth: false });
     }
   },
+  signup: async () => {},
 }));
