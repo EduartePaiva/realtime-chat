@@ -8,6 +8,7 @@ import Navbar from "./components/navbar.tsx";
 import { useAuthStore } from "./store/use-auth-store.ts";
 import { useEffect } from "react";
 import { Loader } from "lucide-react";
+import { Toaster } from "react-hot-toast";
 
 export default function App() {
   const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
@@ -35,6 +36,8 @@ export default function App() {
           <Route path="/profile" element={authUser ? <ProfilePage /> : <Navigate to="/login" />} />
         </Route>
       </Routes>
+
+      <Toaster />
     </BrowserRouter>
   );
 }
