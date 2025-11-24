@@ -10,6 +10,7 @@ type AuthStore = {
   isUpdatingProfile: boolean;
   isCheckingAuth: boolean;
   checkAuth: () => Promise<void>;
+  logout: () => Promise<void>;
   signup: (data: { fullName: string; email: string; password: string }) => Promise<void>;
 };
 
@@ -46,6 +47,19 @@ export const useAuthStore = create<AuthStore>((set) => ({
       }
     } finally {
       set({ isSigningUp: false });
+    }
+  },
+  logout: async () => {
+    try {
+      await axiosInstance.post("/auth/logout");
+      set({ authUser: null });
+    } catch (error) {
+      if (error instanceof AxiosError && error.response) {
+        toast.error(error.response.data.message);
+      } else {
+        console.error(error);
+        toast.error("Failed to logout");
+      }
     }
   },
 }));

@@ -15,7 +15,7 @@ const app = new Hono().basePath("/api");
 app.use(
   cors({
     origin: "http://localhost:5173",
-    allowHeaders: ["X-Custom-Header", "Upgrade-Insecure-Requests"],
+    allowHeaders: ["X-Custom-Header", "Upgrade-Insecure-Requests", "Content-Type"],
     allowMethods: ["POST", "GET", "OPTIONS"],
     exposeHeaders: ["Content-Length", "X-Kuma-Revision"],
     maxAge: 600,
