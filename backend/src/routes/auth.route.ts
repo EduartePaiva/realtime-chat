@@ -68,8 +68,6 @@ authRoutes.post("/login", zValidator("json", loginSchema), async (c) => {
     if (!isPasswordRight) {
       return c.json({ message: "Invalid email or password" }, 401);
     }
-    console.log(JWT_SECRET);
-    console.log(process.env.JWT_SECRET);
     const jwtToken = generateJwtToken(user.id, JWT_SECRET);
     saveJwtCookie(c, jwtToken);
 
