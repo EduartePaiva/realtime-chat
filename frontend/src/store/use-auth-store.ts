@@ -11,6 +11,7 @@ type AuthStore = {
   isCheckingAuth: boolean;
   checkAuth: () => Promise<void>;
   logout: () => Promise<void>;
+  login: (data: { email: string; password: string }) => Promise<void>;
   signup: (data: { fullName: string; email: string; password: string }) => Promise<void>;
 };
 
@@ -60,6 +61,23 @@ export const useAuthStore = create<AuthStore>((set) => ({
         console.error(error);
         toast.error("Failed to logout");
       }
+    }
+  },
+  login: async (data) => {
+    set({ isLoggingIn: true });
+    try {
+      const res = await axiosInstance.post("/auth/login", data);
+      set({ authUser: res.data });
+      toast.success("Logged in successfully");
+    } catch (error) {
+      if (error instanceof AxiosError && error.response) {
+        toast.error(error.response.data.message);
+      } else {
+        console.error(error);
+        toast.error("Failed to create account");
+      }
+    } finally {
+      set({ isLoggingIn: false });
     }
   },
 }));
