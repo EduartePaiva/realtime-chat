@@ -3,8 +3,13 @@ import { axiosInstance } from "../lib/axios";
 import toast from "react-hot-toast";
 import { AxiosError } from "axios";
 
+type UserData = {
+  profilePic: string;
+  fullName: string;
+};
+
 type AuthStore = {
-  authUser: null | object;
+  authUser: UserData | null;
   isSigningUp: boolean;
   isLoggingIn: boolean;
   isUpdatingProfile: boolean;
@@ -13,6 +18,7 @@ type AuthStore = {
   logout: () => Promise<void>;
   login: (data: { email: string; password: string }) => Promise<void>;
   signup: (data: { fullName: string; email: string; password: string }) => Promise<void>;
+  updateProfile: (data: {}) => Promise<void>;
 };
 
 export const useAuthStore = create<AuthStore>((set) => ({
@@ -80,4 +86,5 @@ export const useAuthStore = create<AuthStore>((set) => ({
       set({ isLoggingIn: false });
     }
   },
+  updateProfile: async (data) => {},
 }));
