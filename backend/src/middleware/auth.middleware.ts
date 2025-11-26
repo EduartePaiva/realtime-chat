@@ -8,6 +8,7 @@ type UserMiddlewareData = {
   email: string;
   fullName: string;
   profilePic: string;
+  createdAt: Date;
 };
 
 export const protectRoute = createMiddleware<{
@@ -33,6 +34,7 @@ export const protectRoute = createMiddleware<{
       email: user.email,
       fullName: user.fullName,
       profilePic: user.profilePic,
+      createdAt: user.createdAt,
     });
   } catch (err) {
     console.log("error verifying token", err);

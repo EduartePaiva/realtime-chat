@@ -39,6 +39,7 @@ authRoutes.post("/signup", zValidator("json", signupSchema), async (c) => {
         fullName: newUser.fullName,
         email: newUser.email,
         profilePic: newUser.profilePic,
+        createdAt: newUser.createdAt,
       },
       201
     );
@@ -77,6 +78,7 @@ authRoutes.post("/login", zValidator("json", loginSchema), async (c) => {
         fullName: user.fullName,
         email: user.email,
         profilePic: user.profilePic,
+        createdAt: user.createdAt,
       },
       201
     );
@@ -98,10 +100,10 @@ authRoutes.post("/logout", (c) => {
 });
 
 const updateProfileSchema = z.object({
-  profilePic: z.base64url(),
+  profilePic: z.string(),
 });
 
-authRoutes.get(
+authRoutes.put(
   "/update-profile",
   protectRoute,
   zValidator("json", updateProfileSchema),
@@ -110,7 +112,7 @@ authRoutes.get(
     const { profilePic } = c.req.valid("json");
 
     try {
-      const uploadResponse = await cloudinary.uploader.upload(profilePic);
+      const uploadResponse = await cloudinary.uploader.upload(profilePic, { image_metadata: true });
 
       const updatedUser = await User.findByIdAndUpdate(
         userID,
@@ -118,7 +120,7 @@ authRoutes.get(
           profilePic: uploadResponse.secure_url,
         },
         { new: true }
-      );
+      ).exec();
 
       c.json(updatedUser, 200);
     } catch (error) {

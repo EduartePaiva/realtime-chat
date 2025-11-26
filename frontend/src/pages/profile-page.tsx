@@ -1,10 +1,31 @@
 import { Camera, User } from "lucide-react";
 import { useAuthStore } from "../store/use-auth-store";
+import { useRef } from "react";
 
 export default function ProfilePage() {
   const { authUser, isUpdatingProfile, updateProfile } = useAuthStore();
+  const profileImgRef = useRef<HTMLImageElement | null>(null);
 
-  const handleImageUpload = async (e) => {};
+  console.log(authUser);
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || e.target.files.length == 0) {
+      return;
+    }
+    const file = e.target.files[0];
+    const reader = new FileReader();
+
+    reader.readAsDataURL(file);
+    reader.onload = async () => {
+      const dataURL = reader.result;
+
+      if (typeof dataURL !== "string" || profileImgRef.current == null) return;
+
+      await updateProfile({ profilePic: dataURL });
+
+      profileImgRef.current.src = dataURL;
+    };
+  };
   return (
     <div className="h-screen pt-20">
       <div className="max-w-2xl mx-auto p-4 space-y-8">
@@ -19,6 +40,7 @@ export default function ProfilePage() {
           <div className="flex flex-col items-center gap-4">
             <div className="relative">
               <img
+                ref={profileImgRef}
                 src={authUser?.profilePic || "/avatar.png"}
                 alt="Profile"
                 className="size-32 rounded-full object-cover border-4"
@@ -53,6 +75,28 @@ export default function ProfilePage() {
                 Full Name
               </div>
               <p className="px-4 py-2.5 bg-base-200 rounded-lg border">{authUser?.fullName}</p>
+            </div>
+
+            <div className="space-y-1.5">
+              <div className="text-sm text-zinc-400 flex items-center gap-2">
+                <User className="w-4 h-4" />
+                Email Address
+              </div>
+              <p className="px-4 py-2.5 bg-base-200 rounded-lg border">{authUser?.email}</p>
+            </div>
+
+            <div className=" mt-6 bg-base-300 rounded-xl p-6">
+              <h2 className="text-lg font-medium mb-4">Account Information</h2>
+              <div className="space-y-3 text-sm">
+                <div className="flex items-center justify-between py-2 border-b border-zinc-700">
+                  <span>Member Since</span>
+                  <span>{authUser?.createdAt?.split("T")[0]}</span>
+                </div>
+                <div className="flex items-center justify-between py-2">
+                  <span>Account Status</span>
+                  <span className="text-green-500">Active</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>

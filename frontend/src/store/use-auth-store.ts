@@ -6,6 +6,8 @@ import { AxiosError } from "axios";
 type UserData = {
   profilePic: string;
   fullName: string;
+  email: string;
+  createdAt: string;
 };
 
 type AuthStore = {
@@ -18,7 +20,7 @@ type AuthStore = {
   logout: () => Promise<void>;
   login: (data: { email: string; password: string }) => Promise<void>;
   signup: (data: { fullName: string; email: string; password: string }) => Promise<void>;
-  updateProfile: (data: {}) => Promise<void>;
+  updateProfile: (data: { profilePic: string }) => Promise<void>;
 };
 
 export const useAuthStore = create<AuthStore>((set) => ({
@@ -86,5 +88,22 @@ export const useAuthStore = create<AuthStore>((set) => ({
       set({ isLoggingIn: false });
     }
   },
-  updateProfile: async (data) => {},
+  updateProfile: async (data) => {
+    set({ isUpdatingProfile: true });
+
+    try {
+      const res = await axiosInstance.put("/auth/update-profile", data);
+      set({ authUser: res.data });
+      toast.success("Profile updated successfully");
+    } catch (error) {
+      if (error instanceof AxiosError && error.response) {
+        toast.error(error.response.data.message);
+      } else {
+        console.error(error);
+        toast.error("Failed to update profile image");
+      }
+    } finally {
+      set({ isUpdatingProfile: false });
+    }
+  },
 }));
