@@ -113,7 +113,7 @@ authRoutes.put(
 
     try {
       const uploadResponse = await cloudinary.uploader.upload(profilePic, { image_metadata: true });
-
+      console.log(uploadResponse);
       const updatedUser = await User.findByIdAndUpdate(
         userID,
         {
@@ -122,7 +122,7 @@ authRoutes.put(
         { new: true }
       ).exec();
 
-      c.json(updatedUser, 200);
+      return c.json(updatedUser, 200);
     } catch (error) {
       console.log("error in update profile: ", error);
       return c.json({ message: "Internal Server Error" }, 500);

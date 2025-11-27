@@ -1,7 +1,11 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <script>
+      const theme = localStorage.getItem("chat-theme") || "dark";
+      document.documentElement.setAttribute("data-theme", theme);
+    </script>
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>frontend</title>

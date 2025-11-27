@@ -32,7 +32,7 @@ export default function ProfilePage() {
         <div className="bg-base-300 rounded-xl p-6 space-y-8">
           <div className="text-center">
             <h1 className="text-2xl font-semibold">Profile</h1>
-            <p className="mt-2 text-zinc-400">Your profile information</p>
+            <p className="mt-2 text-base-content/70">Your profile information</p>
           </div>
 
           {/* avatar upload section */}
@@ -63,14 +63,14 @@ export default function ProfilePage() {
               </label>
             </div>
 
-            <p className="text-sm text-zinc-400">
+            <p className="text-sm text-base-content/70">
               {isUpdatingProfile ? "Uploading..." : "Click the camera icon to update your photo "}
             </p>
           </div>
 
           <div className="space-y-6">
             <div className="space-y-1.5">
-              <div className="text-sm text-zinc-400 flex items-center gap-2">
+              <div className="text-sm text-base-content/70 flex items-center gap-2">
                 <User className="w-4 h-4" />
                 Full Name
               </div>
@@ -78,7 +78,7 @@ export default function ProfilePage() {
             </div>
 
             <div className="space-y-1.5">
-              <div className="text-sm text-zinc-400 flex items-center gap-2">
+              <div className="text-sm text-base-content/70 flex items-center gap-2">
                 <User className="w-4 h-4" />
                 Email Address
               </div>
