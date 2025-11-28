@@ -6,16 +6,11 @@ import SettingsPage from "./pages/settings-page.tsx";
 import ProfilePage from "./pages/profile-page.tsx";
 import Navbar from "./components/navbar.tsx";
 import { useAuthStore } from "./store/use-auth-store.ts";
-import { useEffect } from "react";
 import { Loader } from "lucide-react";
 import { Toaster } from "react-hot-toast";
 
 export default function App() {
-  const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
-
-  useEffect(() => {
-    checkAuth();
-  }, [checkAuth]);
+  const { authUser, isCheckingAuth } = useAuthStore();
 
   if (isCheckingAuth && !authUser) {
     return (
