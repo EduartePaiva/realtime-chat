@@ -24,7 +24,7 @@ app.use(
 );
 
 app.route("/auth", authRoutes);
-app.route("/message", messageRoutes);
+app.route("/messages", messageRoutes);
 
 app.get("/", (c) => {
   return c.text("Hello Hono!");
