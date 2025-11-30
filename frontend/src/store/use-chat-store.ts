@@ -10,8 +10,12 @@ type User = {
   profilePic: string;
 };
 
+type MessageData = {
+  text: string;
+};
+
 type ChatStore = {
-  messages: [];
+  messages: MessageData[];
   users: User[];
   selectedUser: null | User;
   isUsersLoading: boolean;
@@ -19,10 +23,11 @@ type ChatStore = {
 
   getUsers: () => Promise<void>;
   getMessages: (userId: string) => Promise<void>;
-  setSelectedUser: (user: User) => void;
+  setSelectedUser: (user: User | null) => void;
+  sendMessage: (messageData: MessageData) => Promise<void>;
 };
 
-export const useChatStore = create<ChatStore>((set) => ({
+export const useChatStore = create<ChatStore>((set, get) => ({
   messages: [],
   users: [],
   selectedUser: null,
@@ -62,4 +67,18 @@ export const useChatStore = create<ChatStore>((set) => ({
     }
   },
   setSelectedUser: (user) => set({ selectedUser: user }),
+  sendMessage: async (messageData) => {
+    const { selectedUser, messages } = get();
+    try {
+      const res = await axiosInstance.post(`/messages/send/${selectedUser?._id}`, messageData);
+      set({ messages: [...messages, res.data] });
+    } catch (error) {
+      if (error instanceof AxiosError && error.response) {
+        toast.error(error.response.data.message);
+      } else {
+        console.error(error);
+        toast.error("Failed to send messages");
+      }
+    }
+  },
 }));

@@ -16,6 +16,7 @@ type AuthStore = {
   isLoggingIn: boolean;
   isUpdatingProfile: boolean;
   isCheckingAuth: boolean;
+  onlineUsers: string[];
   checkAuth: () => Promise<void>;
   logout: () => Promise<void>;
   login: (data: { email: string; password: string }) => Promise<void>;
@@ -29,6 +30,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
   isLoggingIn: false,
   isUpdatingProfile: false,
   isCheckingAuth: true,
+  onlineUsers: [],
   checkAuth: async () => {
     try {
       const res = await axiosInstance.get("/auth/check");
