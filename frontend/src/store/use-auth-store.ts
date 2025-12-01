@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import { AxiosError } from "axios";
 
 type UserData = {
+  userID: string;
   profilePic: string;
   fullName: string;
   email: string;

@@ -74,7 +74,7 @@ authRoutes.post("/login", zValidator("json", loginSchema), async (c) => {
 
     return c.json(
       {
-        _id: user._id.toHexString(),
+        userID: user._id.toHexString(),
         fullName: user.fullName,
         email: user.email,
         profilePic: user.profilePic,

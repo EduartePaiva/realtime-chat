@@ -11,7 +11,12 @@ type User = {
 };
 
 type MessageData = {
-  text: string;
+  _id: string;
+  text?: string | null;
+  image?: string | null;
+  senderId: string;
+  receiverId: string;
+  createdAt: string;
 };
 
 type ChatStore = {
@@ -24,7 +29,7 @@ type ChatStore = {
   getUsers: () => Promise<void>;
   getMessages: (userId: string) => Promise<void>;
   setSelectedUser: (user: User | null) => void;
-  sendMessage: (messageData: MessageData) => Promise<void>;
+  sendMessage: (messageData: { image?: string | null; text?: string | null }) => Promise<void>;
 };
 
 export const useChatStore = create<ChatStore>((set, get) => ({

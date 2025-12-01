@@ -45,10 +45,12 @@ messageRoutes.get("/:id", protectRoute, async (c) => {
   }
 });
 
-const sendMessageSchema = z.object({
-  text: z.string(),
-  image: z.base64url().nullable(),
-});
+const sendMessageSchema = z
+  .object({
+    text: z.string().nullable().optional(),
+    image: z.string().nullable().optional(),
+  })
+  .refine((data) => data.text || data.image, { message: "You must send either text or an image" });
 
 messageRoutes.post("/send/:id", protectRoute, zValidator("json", sendMessageSchema), async (c) => {
   try {

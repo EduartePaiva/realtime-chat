@@ -1,11 +1,13 @@
 import { Image, X } from "lucide-react";
 import { useRef, useState } from "react";
 import toast from "react-hot-toast";
+import { useChatStore } from "../store/use-chat-store";
 
 export default function MessageInput() {
   const [text, setText] = useState("");
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { sendMessage } = useChatStore();
 
   const handleImagePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
     const files = e.clipboardData.files;
@@ -53,8 +55,22 @@ export default function MessageInput() {
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
-  const handleSendMessage = async (e) => {
+  const handleSendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!text.trim() && !imagePreview) return;
+    try {
+      await sendMessage({
+        text: text.trim(),
+        image: imagePreview,
+      });
+
+      // Clear form
+      setText("");
+      setImagePreview(null);
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    } catch (error) {
+      console.error("Failed to send message:", error);
+    }
   };
 
   return (
