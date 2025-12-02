@@ -5,12 +5,13 @@ import authRoutes from "./routes/auth.route.js";
 import { connectDB } from "./lib/db.js";
 import messageRoutes from "./routes/message.route.js";
 import { cors } from "hono/cors";
+import { app } from "./lib/socket.js";
 
 dotenv.config();
 
 const PORT = process.env.PORT!;
 
-const app = new Hono().basePath("/api");
+app.basePath("/api");
 
 app.use(
   cors({
