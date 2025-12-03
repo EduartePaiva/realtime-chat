@@ -5,9 +5,11 @@ import authRoutes from "./routes/auth.route.js";
 import { connectDB } from "./lib/db.js";
 import messageRoutes from "./routes/message.route.js";
 import { cors } from "hono/cors";
-import { app } from "./lib/socket.js";
+import { Server } from "socket.io";
 
 dotenv.config();
+
+const app = new Hono();
 
 const PORT = process.env.PORT!;
 
@@ -31,7 +33,7 @@ app.get("/", (c) => {
   return c.text("Hello Hono!");
 });
 
-serve(
+const httpServer = serve(
   {
     fetch: app.fetch,
     port: Number(PORT),
@@ -41,3 +43,11 @@ serve(
     connectDB();
   }
 );
+
+const io = new Server(httpServer, {
+  /* options */
+});
+
+io.on("connection", (socket) => {
+  // ...
+});
