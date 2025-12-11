@@ -5,15 +5,13 @@ import authRoutes from "./routes/auth.route.js";
 import { connectDB } from "./lib/db.js";
 import messageRoutes from "./routes/message.route.js";
 import { cors } from "hono/cors";
-import { Server } from "socket.io";
+import io from "./lib/socket.js";
 
 dotenv.config();
 
-const app = new Hono();
+const app = new Hono().basePath("/api");
 
 const PORT = process.env.PORT!;
-
-app.basePath("/api");
 
 app.use(
   cors({
@@ -44,17 +42,4 @@ const httpServer = serve(
   }
 );
 
-const io = new Server(httpServer, {
-  cors: {
-    origin: ["http://localhost:5173"],
-  },
-  /* options */
-});
-
-io.on("connection", (socket) => {
-  console.log("A user connected", socket.id);
-
-  socket.on("disconnect", () => {
-    console.log("A user disconnected", socket.id);
-  });
-});
+io.attach(httpServer);
