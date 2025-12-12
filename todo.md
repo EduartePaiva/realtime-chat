@@ -6,3 +6,4 @@ checklist to improve project:
 [_] user can send multiple images
 [_] optimize image sending by sending binary file instead of url
 [_] optimize image preview by creating objectURL
+[_] optimize using best practices for zustand
