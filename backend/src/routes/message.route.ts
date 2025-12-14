@@ -5,6 +5,7 @@ import { zValidator } from "@hono/zod-validator";
 import z from "zod";
 import Message from "../models/message.model.js";
 import cloudinary from "../lib/cloudinary.js";
+import io, { getReceiverSocketId } from "../lib/socket.js";
 
 const messageRoutes = new Hono();
 
@@ -70,7 +71,10 @@ messageRoutes.post("/send/:id", protectRoute, zValidator("json", sendMessageSche
 
     await newMessage.save();
 
-    // todo: realtime functionality goes here with socket.io
+    const receiverSocketId = getReceiverSocketId(receiverId);
+    if (receiverSocketId) {
+      io.to(receiverSocketId).emit("newMessage", newMessage);
+    }
 
     return c.json(newMessage, 201);
   } catch (error) {

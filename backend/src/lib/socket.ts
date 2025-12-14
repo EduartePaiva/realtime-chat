@@ -10,7 +10,10 @@ const io = new Server({
 });
 
 export function getReceiverSocketId(userId: string) {
-  return userSocketMap[userId];
+  if (userId in userSocketMap) {
+    return userSocketMap[userId];
+  }
+  return null;
 }
 
 io.on("connection", (socket) => {

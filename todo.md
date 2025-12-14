@@ -7,3 +7,4 @@ checklist to improve project:
 [_] optimize image sending by sending binary file instead of url
 [_] optimize image preview by creating objectURL
 [_] optimize using best practices for zustand
+[_] zoom in images when user clicks like wpp
