@@ -8,3 +8,4 @@ checklist to improve project:
 [_] optimize image preview by creating objectURL
 [_] optimize using best practices for zustand
 [_] zoom in images when user clicks like wpp
+[_] implement friend list instead of all users being visible
