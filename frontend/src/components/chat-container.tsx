@@ -1,10 +1,11 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useChatStore } from "../store/use-chat-store";
 import ChatHeader from "./chat-header";
 import MessageInput from "./message-input";
 import MessageSkeleton from "./skeletons/message-skeleton";
 import { useAuthStore } from "../store/use-auth-store";
 import { formatMessageTime } from "../lib/utils";
+import ZoomedInImage from "./zoomed-in-image";
 
 export default function ChatContainer() {
   const {
@@ -17,6 +18,8 @@ export default function ChatContainer() {
   } = useChatStore();
   const { authUser, isCheckingAuth } = useAuthStore();
   const messageEndRef = useRef<null | HTMLDivElement>(null);
+  const moralRef = useRef<HTMLDialogElement | null>(null);
+  const [selectedImageSrc, setSelectedImageSrc] = useState("");
 
   useEffect(() => {
     if (!selectedUser) return;
@@ -81,7 +84,11 @@ export default function ChatContainer() {
                 <img
                   src={message.image}
                   alt="Attachment"
-                  className="sm:max-w-[200px] rounded-md mb-2"
+                  className="sm:max-w-[200px] rounded-md mb-2 cursor-zoom-in"
+                  onClick={() => {
+                    setSelectedImageSrc(message.image || "");
+                    moralRef.current?.showModal();
+                  }}
                 />
               )}
 
@@ -90,6 +97,7 @@ export default function ChatContainer() {
           </div>
         ))}
       </div>
+      <ZoomedInImage modalRef={moralRef} src={selectedImageSrc} />
 
       <MessageInput />
     </div>

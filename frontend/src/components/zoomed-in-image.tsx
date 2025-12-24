@@ -1,23 +1,25 @@
+import { X } from "lucide-react";
+
 type ZoomedInImageProps = {
   src: string;
+  modalRef: React.RefObject<HTMLDialogElement | null>;
 };
 
-export default function ZoomedInImage({ src }: ZoomedInImageProps) {
+export default function ZoomedInImage({ src, modalRef }: ZoomedInImageProps) {
   return (
-    <div className="z-20 w-full h-full">
-      {/* Open the modal using document.getElementById('ID').showModal() method */}
-      <button className="btn" onClick={() => document.getElementById("my_modal_2").showModal()}>
-        open modal
-      </button>
-      <dialog id="my_modal_2" className="modal">
-        <div className="modal-box">
-          <h3 className="font-bold text-lg">Hello!</h3>
-          <p className="py-4">Press ESC key or click outside to close</p>
-        </div>
-        <form method="dialog" className="modal-backdrop">
-          <button>close</button>
+    <dialog ref={modalRef} className="modal">
+      <div className="modal-box flex flex-col gap-4 ">
+        <form method="dialog">
+          {/* if there is a button in form, it will close the modal */}
+          <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+            <X className="h-5 w-5" />
+          </button>
         </form>
-      </dialog>
-    </div>
+        <img src={src} alt="zoomed in image" />
+      </div>
+      <form method="dialog" className="modal-backdrop">
+        <button>close</button>
+      </form>
+    </dialog>
   );
 }
