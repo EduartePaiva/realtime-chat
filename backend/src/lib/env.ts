@@ -1,6 +1,6 @@
 import { config } from "dotenv";
 import path from "node:path";
-import { z, ZodError } from "zod";
+import z from "zod";
 
 config({
   path: path.resolve(

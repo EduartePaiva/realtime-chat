@@ -2,6 +2,7 @@ import { getCookie } from "hono/cookie";
 import { createMiddleware } from "hono/factory";
 import { verifyAndExtractJwtUserID } from "../lib/utils.js";
 import User from "../models/user.model.js";
+import env from "../lib/env.js";
 
 type UserMiddlewareData = {
   userID: string;
@@ -22,7 +23,7 @@ export const protectRoute = createMiddleware<{
   }
 
   try {
-    const userId = verifyAndExtractJwtUserID(jwtToken, process.env.JWT_SECRET!);
+    const userId = verifyAndExtractJwtUserID(jwtToken, env.JWT_SECRET);
 
     const user = await User.findById(userId).select("-password").exec();
     if (!user) {

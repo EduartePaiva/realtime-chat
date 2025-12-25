@@ -1,6 +1,7 @@
 import type { Context } from "hono";
 import { deleteCookie, setCookie } from "hono/cookie";
 import jwt from "jsonwebtoken";
+import env from "./env.js";
 
 const COOKIE_NAME = "token";
 
@@ -26,7 +27,7 @@ export const saveJwtCookie = (c: Context, value: string) => {
     httpOnly: true,
     maxAge: 7 * 24 * 60 * 60,
     sameSite: "strict",
-    secure: process.env.NODE_ENV !== "development",
+    secure: env.NODE_ENV !== "development",
   });
 };
 

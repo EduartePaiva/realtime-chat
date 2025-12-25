@@ -6,12 +6,11 @@ import { connectDB } from "./lib/db.js";
 import messageRoutes from "./routes/message.route.js";
 import { cors } from "hono/cors";
 import io from "./lib/socket.js";
+import env from "./lib/env.js";
 
 dotenv.config();
 
 const app = new Hono().basePath("/api");
-
-const PORT = process.env.PORT!;
 
 app.use(
   cors({
@@ -34,7 +33,7 @@ app.get("/", (c) => {
 const httpServer = serve(
   {
     fetch: app.fetch,
-    port: Number(PORT),
+    port: env.PORT,
   },
   (info) => {
     console.log(`Server is running on http://localhost:${info.port}`);

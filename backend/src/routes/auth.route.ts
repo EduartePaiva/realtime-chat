@@ -6,6 +6,7 @@ import bcrypt from "bcryptjs";
 import { deleteJwtCookie, generateJwtToken, saveJwtCookie } from "../lib/utils.js";
 import { protectRoute } from "../middleware/auth.middleware.js";
 import cloudinary from "../lib/cloudinary.js";
+import env from "../lib/env.js";
 
 const authRoutes = new Hono();
 
@@ -17,7 +18,6 @@ const signupSchema = z.object({
 
 authRoutes.post("/signup", zValidator("json", signupSchema), async (c) => {
   const { email, fullName, password } = c.req.valid("json");
-  const JWT_SECRET = process.env.JWT_SECRET!;
 
   try {
     const res = await User.findOne({ email: email });
@@ -30,7 +30,7 @@ authRoutes.post("/signup", zValidator("json", signupSchema), async (c) => {
     const newUser = new User({ password: hashedPass, fullName, email });
     await newUser.save();
 
-    const jwtToken = generateJwtToken(newUser._id.toHexString(), JWT_SECRET);
+    const jwtToken = generateJwtToken(newUser._id.toHexString(), env.JWT_SECRET);
     saveJwtCookie(c, jwtToken);
 
     return c.json(
@@ -57,7 +57,6 @@ const loginSchema = z.object({
 
 authRoutes.post("/login", zValidator("json", loginSchema), async (c) => {
   const { email, password } = c.req.valid("json");
-  const JWT_SECRET = process.env.JWT_SECRET!;
 
   try {
     const user = await User.findOne({ email: email }).exec();
@@ -69,7 +68,7 @@ authRoutes.post("/login", zValidator("json", loginSchema), async (c) => {
     if (!isPasswordRight) {
       return c.json({ message: "Invalid email or password" }, 401);
     }
-    const jwtToken = generateJwtToken(user.id, JWT_SECRET);
+    const jwtToken = generateJwtToken(user.id, env.JWT_SECRET);
     saveJwtCookie(c, jwtToken);
 
     return c.json(

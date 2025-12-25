@@ -1,6 +1,6 @@
 checklist to improve project:
 
-[_] improve env variables handling --
+[x] improve env variables handling
 [_] improve profile pic upload with what I did in a previous project
 [x] paste an image on the input text should upload an image
 [_] user can send multiple images
