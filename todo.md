@@ -1,6 +1,6 @@
 checklist to improve project:
 
-[_] improve env variables handling
+[_] improve env variables handling --
 [_] improve profile pic upload with what I did in a previous project
 [x] paste an image on the input text should upload an image
 [_] user can send multiple images
@@ -9,3 +9,4 @@ checklist to improve project:
 [_] optimize using best practices for zustand
 [x] zoom in images when user clicks like wpp --
 [_] implement friend list instead of all users being visible
+[_] look at the patterns documented typesafe api
