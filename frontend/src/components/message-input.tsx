@@ -6,6 +6,7 @@ import { useChatStore } from "../store/use-chat-store";
 export default function MessageInput() {
   const [text, setText] = useState("");
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { sendMessage } = useChatStore();
 
@@ -38,6 +39,7 @@ export default function MessageInput() {
   };
 
   const handleImageRead = (image: File) => {
+    setImageFile(image);
     const reader = new FileReader();
 
     reader.onload = () => {
@@ -57,11 +59,11 @@ export default function MessageInput() {
 
   const handleSendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!text.trim() && !imagePreview) return;
+    if (!text.trim() && !imageFile) return;
     try {
       await sendMessage({
         text: text.trim(),
-        image: imagePreview,
+        image: imageFile,
       });
 
       // Clear form

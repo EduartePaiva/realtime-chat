@@ -30,7 +30,7 @@ type ChatStore = {
   getUsers: () => Promise<void>;
   getMessages: (userId: string) => Promise<void>;
   setSelectedUser: (user: User | null) => void;
-  sendMessage: (messageData: { image?: string | null; text?: string | null }) => Promise<void>;
+  sendMessage: (messageData: { image?: File | null; text?: string | null }) => Promise<void>;
   subscribeToMessages: () => void;
   unsubscribeFromMessages: () => void;
 };
@@ -78,7 +78,9 @@ export const useChatStore = create<ChatStore>((set, get) => ({
   sendMessage: async (messageData) => {
     const { selectedUser, messages } = get();
     try {
-      const res = await axiosInstance.post(`/messages/send/${selectedUser?._id}`, messageData);
+      const res = await axiosInstance.post(`/messages/send/${selectedUser?._id}`, messageData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
       set({ messages: [...messages, res.data] });
     } catch (error) {
       if (error instanceof AxiosError && error.response) {
