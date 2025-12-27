@@ -6,8 +6,6 @@ export default function ProfilePage() {
   const { authUser, isUpdatingProfile, updateProfile } = useAuthStore();
   const profileImgRef = useRef<HTMLImageElement | null>(null);
 
-  console.log(authUser);
-
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files || e.target.files.length == 0) {
       return;

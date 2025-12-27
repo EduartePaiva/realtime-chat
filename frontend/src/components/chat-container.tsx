@@ -34,7 +34,6 @@ export default function ChatContainer() {
 
   useEffect(() => {
     if (messageEndRef.current && messages) {
-      console.log(messageEndRef.current);
       messageEndRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [messages]);

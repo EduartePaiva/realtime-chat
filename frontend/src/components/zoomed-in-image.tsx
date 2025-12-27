@@ -15,7 +15,7 @@ export default function ZoomedInImage({ src, modalRef }: ZoomedInImageProps) {
             <X className="h-5 w-5" />
           </button>
         </form>
-        <img src={src} alt="zoomed in image" />
+        {src && <img src={src} alt="zoomed in image" />}
       </div>
       <form method="dialog" className="modal-backdrop">
         <button>close</button>

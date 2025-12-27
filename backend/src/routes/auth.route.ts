@@ -112,7 +112,6 @@ authRoutes.put(
 
     try {
       const uploadResponse = await cloudinary.uploader.upload(profilePic, { image_metadata: true });
-      console.log(uploadResponse);
       const updatedUser = await User.findByIdAndUpdate(
         userID,
         {
