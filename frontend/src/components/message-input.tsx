@@ -68,6 +68,7 @@ export default function MessageInput() {
 
       // Clear form
       setText("");
+      setImageFile(null);
       setImagePreview(null);
       if (fileInputRef.current) fileInputRef.current.value = "";
     } catch (error) {
