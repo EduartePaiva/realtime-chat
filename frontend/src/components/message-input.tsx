@@ -5,7 +5,7 @@ import { useChatStore } from "../store/use-chat-store";
 
 export default function MessageInput() {
   const [text, setText] = useState("");
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [imagePreviewObjURL, setImagePreviewObjURL] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { sendMessage } = useChatStore();
@@ -40,20 +40,16 @@ export default function MessageInput() {
 
   const handleImageRead = (image: File) => {
     setImageFile(image);
-    const reader = new FileReader();
 
-    reader.onload = () => {
-      const fileURL = reader.result;
-
-      if (typeof fileURL !== "string") return;
-      setImagePreview(fileURL);
-    };
-
-    reader.readAsDataURL(image);
+    if (imagePreviewObjURL) {
+      URL.revokeObjectURL(imagePreviewObjURL);
+    }
+    const objURL = URL.createObjectURL(image);
+    setImagePreviewObjURL(objURL);
   };
 
   const removeImage = () => {
-    setImagePreview(null);
+    setImagePreviewObjURL(null);
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
@@ -67,10 +63,11 @@ export default function MessageInput() {
       });
 
       // Clear form
+      if (imagePreviewObjURL) URL.revokeObjectURL(imagePreviewObjURL);
+      if (fileInputRef.current) fileInputRef.current.value = "";
       setText("");
       setImageFile(null);
-      setImagePreview(null);
-      if (fileInputRef.current) fileInputRef.current.value = "";
+      setImagePreviewObjURL(null);
     } catch (error) {
       console.error("Failed to send message:", error);
     }
@@ -78,11 +75,11 @@ export default function MessageInput() {
 
   return (
     <div className="p-4 w-full">
-      {imagePreview && (
+      {imagePreviewObjURL && (
         <div className="mb-3 flex items-center gap-2">
           <div className="relative">
             <img
-              src={imagePreview}
+              src={imagePreviewObjURL}
               alt="Preview"
               className="w-20 h-20 object-cover rounded-lg border border-base-300"
             />
@@ -118,7 +115,7 @@ export default function MessageInput() {
           <button
             type="button"
             className={`hidden sm:flex btn btn-circle ${
-              imagePreview ? "text-primary" : "text-base"
+              imagePreviewObjURL ? "text-primary" : "text-base"
             }`}
             onClick={() => fileInputRef.current?.click()}
           >
