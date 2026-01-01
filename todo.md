@@ -5,7 +5,7 @@ checklist to improve project:
 [x] optimize image sending by sending binary file instead of url
 [x] optimize image preview by creating objectURL
 [x] zoom in images when user clicks like wpp
-[_] give user loading while sending image/text and don't allow him to send while loading --
+[x] give user loading while sending image/text and don't allow him to send while loading --
 [_] look at the patterns documented typesafe api
 [_] optimize using best practices for zustand
 [_] implement friend list instead of all users being visible

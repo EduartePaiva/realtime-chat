@@ -1,4 +1,4 @@
-import { Image, X } from "lucide-react";
+import { Image, Loader2, X } from "lucide-react";
 import { useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { useChatStore } from "../store/use-chat-store";
@@ -8,6 +8,7 @@ export default function MessageInput() {
   const [imagePreviewObjURL, setImagePreviewObjURL] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isSendingMessage, setIsSendingMessage] = useState(false);
   const { sendMessage } = useChatStore();
 
   const handleImagePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
@@ -57,6 +58,7 @@ export default function MessageInput() {
     e.preventDefault();
     if (!text.trim() && !imageFile) return;
     try {
+      setIsSendingMessage(true);
       await sendMessage({
         text: text.trim(),
         image: imageFile,
@@ -70,6 +72,8 @@ export default function MessageInput() {
       setImagePreviewObjURL(null);
     } catch (error) {
       console.error("Failed to send message:", error);
+    } finally {
+      setIsSendingMessage(false);
     }
   };
 
@@ -88,6 +92,7 @@ export default function MessageInput() {
               onClick={removeImage}
               className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-base-300 flex items-center justify-center"
               type="button"
+              disabled={isSendingMessage}
             >
               <X className="size-3" />
             </button>
@@ -102,6 +107,7 @@ export default function MessageInput() {
             className="w-full input input-bordered rounded-lg input-sm sm:input-md"
             placeholder="Type a message..."
             value={text}
+            disabled={isSendingMessage}
             onChange={(e) => setText(e.target.value)}
             onPaste={handleImagePaste}
           />
@@ -117,9 +123,14 @@ export default function MessageInput() {
             className={`hidden sm:flex btn btn-circle ${
               imagePreviewObjURL ? "text-primary" : "text-base"
             }`}
+            disabled={isSendingMessage}
             onClick={() => fileInputRef.current?.click()}
           >
-            <Image size={20} />
+            {isSendingMessage ? (
+              <Loader2 size={20} className="animate-spin" />
+            ) : (
+              <Image size={20} />
+            )}
           </button>
         </div>
       </form>
