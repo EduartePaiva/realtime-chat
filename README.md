@@ -1,3 +1,5 @@
+# Readme In Progress
+
 # Realtime Chat
 
 Realtime Chat is an instant chat message application that allows to communicate in real time and share images.
@@ -29,11 +31,15 @@ Realtime Chat is an instant chat message application that allows to communicate 
 - Dependency
     - Docker+Docker Compose
 
+- setup environment variables following .env.example in /apps/backend
+
 - build project
-> /docker compose build -f compose-prod.yaml
+    > /docker compose build -f compose.prod.yaml
 
 - run project
-> /docker compose up -f compose-prod.yaml
+    > /docker compose up -f compose.prod.yaml
+
+- for image uploading you would need to setup Cloudinary env variables, check out Cloudinary [documentation](https://cloudinary.com/documentation)
 
   ## Authors
 
