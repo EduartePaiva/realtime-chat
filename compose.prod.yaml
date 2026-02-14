@@ -7,11 +7,17 @@ services:
     ports:
       - 27017:27017
   front:
-    image: ./apps/frontend/Dockerfile.prod
+    build:
+      context: ./apps/frontend
+      dockerfile: Dockerfile
     depends_on:
       - mongo
       - back
   back:
-    image: ./apps/backend/Dockerfile.prod
+    build:
+      context: ./apps/frontend
+      dockerfile: Dockerfile
+    env_file:
+      - ./apps/backend/.env
     depends_on:
       - mongo
