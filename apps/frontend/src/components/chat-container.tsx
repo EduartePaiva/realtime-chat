@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
+import { formatMessageTime } from "../lib/utils";
+import { useAuthStore } from "../store/use-auth-store";
 import { useChatStore } from "../store/use-chat-store";
 import ChatHeader from "./chat-header";
 import MessageInput from "./message-input";
 import MessageSkeleton from "./skeletons/message-skeleton";
-import { useAuthStore } from "../store/use-auth-store";
-import { formatMessageTime } from "../lib/utils";
 import ZoomedInImage from "./zoomed-in-image";
 
 export default function ChatContainer() {
