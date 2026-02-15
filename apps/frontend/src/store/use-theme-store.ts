@@ -10,9 +10,7 @@ type ThemeStore = {
 
 const localStorageKey = "chat-theme";
 
-const initialTheme = document.documentElement.getAttribute(
-	"data-theme",
-) as Theme;
+const initialTheme = document.documentElement.getAttribute("data-theme") as Theme;
 
 export const useThemeStore = create<ThemeStore>((set) => ({
 	theme: initialTheme,

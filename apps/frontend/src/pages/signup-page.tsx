@@ -1,14 +1,6 @@
 import { useState } from "react";
 import { useAuthStore } from "../store/use-auth-store";
-import {
-	Eye,
-	EyeOff,
-	Loader2,
-	Lock,
-	Mail,
-	MessageSquare,
-	User,
-} from "lucide-react";
+import { Eye, EyeOff, Loader2, Lock, Mail, MessageSquare, User } from "lucide-react";
 import { Link } from "react-router";
 import AuthImagePattern from "../components/auth-image-pattern";
 import toast from "react-hot-toast";
@@ -71,9 +63,7 @@ export default function SignUpPage() {
 								<MessageSquare className="size-6 text-primary" />
 							</div>
 							<h1 className="text-2xl font-bold mt-2">Create Account</h1>
-							<p className="text-base-content/60">
-								Get started with your free account
-							</p>
+							<p className="text-base-content/60">Get started with your free account</p>
 						</div>
 					</div>
 
@@ -92,9 +82,7 @@ export default function SignUpPage() {
 									className={`input input-bordered w-full pl-10`}
 									placeholder="John Doe"
 									value={formData.fullName}
-									onChange={(e) =>
-										setFormData({ ...formData, fullName: e.target.value })
-									}
+									onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
 								/>
 							</div>
 						</div>
@@ -111,9 +99,7 @@ export default function SignUpPage() {
 									className={`input input-bordered w-full pl-10`}
 									placeholder="you@email.com"
 									value={formData.email}
-									onChange={(e) =>
-										setFormData({ ...formData, email: e.target.value })
-									}
+									onChange={(e) => setFormData({ ...formData, email: e.target.value })}
 								/>
 							</div>
 						</div>
@@ -130,9 +116,7 @@ export default function SignUpPage() {
 									className={`input input-bordered w-full pl-10`}
 									placeholder="........"
 									value={formData.password}
-									onChange={(e) =>
-										setFormData({ ...formData, password: e.target.value })
-									}
+									onChange={(e) => setFormData({ ...formData, password: e.target.value })}
 								/>
 								<button
 									type="button"
@@ -148,11 +132,7 @@ export default function SignUpPage() {
 							</div>
 						</div>
 
-						<button
-							type="submit"
-							className="btn btn-primary w-full"
-							disabled={isSigningUp}
-						>
+						<button type="submit" className="btn btn-primary w-full" disabled={isSigningUp}>
 							{isSigningUp ? (
 								<>
 									<Loader2 className="size-5 animate-spin" />

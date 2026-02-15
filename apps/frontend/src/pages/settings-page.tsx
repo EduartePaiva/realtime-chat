@@ -19,9 +19,7 @@ export default function SettingsPage() {
 			<div className="space-y-6">
 				<div className="flex flex-col gap-1">
 					<h2 className="text-lg font-semibold">Theme</h2>
-					<p className="text-sm text-base-content/70">
-						Choose a theme for your chat interface
-					</p>
+					<p className="text-sm text-base-content/70">Choose a theme for your chat interface</p>
 
 					<div className="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2">
 						{THEMES.map((t) => (
@@ -32,10 +30,7 @@ export default function SettingsPage() {
 								}`}
 								onClick={() => setTheme(t)}
 							>
-								<div
-									className="relative h-8 w-full rounded-md overflow-hidden"
-									data-theme={t}
-								>
+								<div className="relative h-8 w-full rounded-md overflow-hidden" data-theme={t}>
 									<div className="absolute insert-0 grid grid-cols-4 gap-px p-1 h-full w-full">
 										<div className="rounded bg-primary"></div>
 										<div className="rounded bg-secondary"></div>
@@ -80,17 +75,13 @@ export default function SettingsPage() {
 										>
 											<div
 												className={`max-w-[80%] rounded-xl p-3 shadow-sm ${
-													message.isSent
-														? "bg-primary text-primary-content"
-														: "bg-base-200"
+													message.isSent ? "bg-primary text-primary-content" : "bg-base-200"
 												}`}
 											>
 												<p className="text-sm">{message.content}</p>
 												<p
 													className={`text-[10px] mt-1.5 ${
-														message.isSent
-															? "text-primary-content/70"
-															: "text-base-content/70"
+														message.isSent ? "text-primary-content/70" : "text-base-content/70"
 													}`}
 												>
 													12:00 PM

@@ -47,9 +47,7 @@ export default function LoginPage() {
 									className={`input input-bordered w-full pl-10`}
 									placeholder="you@email.com"
 									value={formData.email}
-									onChange={(e) =>
-										setFormData({ ...formData, email: e.target.value })
-									}
+									onChange={(e) => setFormData({ ...formData, email: e.target.value })}
 								/>
 							</div>
 						</div>
@@ -66,9 +64,7 @@ export default function LoginPage() {
 									className={`input input-bordered w-full pl-10`}
 									placeholder="........"
 									value={formData.password}
-									onChange={(e) =>
-										setFormData({ ...formData, password: e.target.value })
-									}
+									onChange={(e) => setFormData({ ...formData, password: e.target.value })}
 								/>
 								<button
 									type="button"
@@ -84,11 +80,7 @@ export default function LoginPage() {
 							</div>
 						</div>
 
-						<button
-							type="submit"
-							className="btn btn-primary w-full"
-							disabled={isLoggingIn}
-						>
+						<button type="submit" className="btn btn-primary w-full" disabled={isLoggingIn}>
 							{isLoggingIn ? (
 								<>
 									<Loader2 className="size-5 animate-spin" />

@@ -5,9 +5,7 @@ import { useChatStore } from "../store/use-chat-store";
 
 export default function MessageInput() {
 	const [text, setText] = useState("");
-	const [imagePreviewObjURL, setImagePreviewObjURL] = useState<string | null>(
-		null,
-	);
+	const [imagePreviewObjURL, setImagePreviewObjURL] = useState<string | null>(null);
 	const [imageFile, setImageFile] = useState<File | null>(null);
 	const fileInputRef = useRef<HTMLInputElement>(null);
 	const [isSendingMessage, setIsSendingMessage] = useState(false);

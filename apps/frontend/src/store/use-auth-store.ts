@@ -1,8 +1,8 @@
+import { AxiosError } from "axios";
+import toast from "react-hot-toast";
+import { io, Socket } from "socket.io-client";
 import { create } from "zustand";
 import { axiosInstance } from "../lib/axios";
-import toast from "react-hot-toast";
-import { AxiosError } from "axios";
-import { io, Socket } from "socket.io-client";
 
 type UserData = {
 	userID: string;
@@ -23,11 +23,7 @@ type AuthStore = {
 	checkAuth: () => Promise<void>;
 	logout: () => Promise<void>;
 	login: (data: { email: string; password: string }) => Promise<void>;
-	signup: (data: {
-		fullName: string;
-		email: string;
-		password: string;
-	}) => Promise<void>;
+	signup: (data: { fullName: string; email: string; password: string }) => Promise<void>;
 	updateProfile: (data: { profilePic: string }) => Promise<void>;
 	connectSocket: () => Promise<void>;
 	disconnectSocket: () => Promise<void>;
