@@ -4,34 +4,34 @@ import { Server } from "socket.io";
 const userSocketMap: { [key: string]: string } = {};
 
 const io = new Server({
-  cors: {
-    origin: ["http://localhost:5173"],
-  },
+	cors: {
+		origin: ["http://localhost:5173"],
+	},
 });
 
 export function getReceiverSocketId(userId: string) {
-  if (userId in userSocketMap) {
-    return userSocketMap[userId];
-  }
-  return null;
+	if (userId in userSocketMap) {
+		return userSocketMap[userId];
+	}
+	return null;
 }
 
 io.on("connection", (socket) => {
-  console.log("A user connected", socket.id);
+	console.log("A user connected", socket.id);
 
-  const userID = socket.handshake.query.userID;
-  if (!userID || typeof userID !== "string") {
-    return;
-  }
-  userSocketMap[userID] = socket.id;
+	const userID = socket.handshake.query.userID;
+	if (!userID || typeof userID !== "string") {
+		return;
+	}
+	userSocketMap[userID] = socket.id;
 
-  io.emit("getOnlineUsers", Object.keys(userSocketMap));
+	io.emit("getOnlineUsers", Object.keys(userSocketMap));
 
-  socket.on("disconnect", () => {
-    console.log("A user disconnected", socket.id);
-    delete userSocketMap[userID];
-    io.emit("getOnlineUsers", Object.keys(userSocketMap));
-  });
+	socket.on("disconnect", () => {
+		console.log("A user disconnected", socket.id);
+		delete userSocketMap[userID];
+		io.emit("getOnlineUsers", Object.keys(userSocketMap));
+	});
 });
 
 export default io;

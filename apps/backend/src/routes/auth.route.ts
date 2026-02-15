@@ -11,125 +11,125 @@ import env from "../lib/env.js";
 const authRoutes = new Hono();
 
 const signupSchema = z.object({
-  fullName: z.string().min(1),
-  email: z.email(),
-  password: z.string().min(6),
+	fullName: z.string().min(1),
+	email: z.email(),
+	password: z.string().min(6),
 });
 
 authRoutes.post("/signup", zValidator("json", signupSchema), async (c) => {
-  const { email, fullName, password } = c.req.valid("json");
+	const { email, fullName, password } = c.req.valid("json");
 
-  try {
-    const res = await User.findOne({ email: email });
+	try {
+		const res = await User.findOne({ email: email });
 
-    if (res) return c.json({ message: "Email already exists" }, 400);
+		if (res) return c.json({ message: "Email already exists" }, 400);
 
-    const salt = await bcrypt.genSalt();
-    const hashedPass = await bcrypt.hash(password, salt);
+		const salt = await bcrypt.genSalt();
+		const hashedPass = await bcrypt.hash(password, salt);
 
-    const newUser = new User({ password: hashedPass, fullName, email });
-    await newUser.save();
+		const newUser = new User({ password: hashedPass, fullName, email });
+		await newUser.save();
 
-    const jwtToken = generateJwtToken(newUser._id.toHexString(), env.JWT_SECRET);
-    saveJwtCookie(c, jwtToken);
+		const jwtToken = generateJwtToken(newUser._id.toHexString(), env.JWT_SECRET);
+		saveJwtCookie(c, jwtToken);
 
-    return c.json(
-      {
-        _id: newUser._id.toHexString(),
-        fullName: newUser.fullName,
-        email: newUser.email,
-        profilePic: newUser.profilePic,
-        createdAt: newUser.createdAt,
-      },
-      201
-    );
-  } catch (err) {
-    console.log("error in signup", err);
+		return c.json(
+			{
+				_id: newUser._id.toHexString(),
+				fullName: newUser.fullName,
+				email: newUser.email,
+				profilePic: newUser.profilePic,
+				createdAt: newUser.createdAt,
+			},
+			201,
+		);
+	} catch (err) {
+		console.log("error in signup", err);
 
-    return c.json({ message: "internal server error" }, 500);
-  }
+		return c.json({ message: "internal server error" }, 500);
+	}
 });
 
 const loginSchema = z.object({
-  email: z.email(),
-  password: z.string().min(6),
+	email: z.email(),
+	password: z.string().min(6),
 });
 
 authRoutes.post("/login", zValidator("json", loginSchema), async (c) => {
-  const { email, password } = c.req.valid("json");
+	const { email, password } = c.req.valid("json");
 
-  try {
-    const user = await User.findOne({ email: email }).exec();
-    if (user === null) {
-      return c.json({ message: "Invalid email or password" }, 401);
-    }
+	try {
+		const user = await User.findOne({ email: email }).exec();
+		if (user === null) {
+			return c.json({ message: "Invalid email or password" }, 401);
+		}
 
-    const isPasswordRight = await bcrypt.compare(password, user.password);
-    if (!isPasswordRight) {
-      return c.json({ message: "Invalid email or password" }, 401);
-    }
-    const jwtToken = generateJwtToken(user.id, env.JWT_SECRET);
-    saveJwtCookie(c, jwtToken);
+		const isPasswordRight = await bcrypt.compare(password, user.password);
+		if (!isPasswordRight) {
+			return c.json({ message: "Invalid email or password" }, 401);
+		}
+		const jwtToken = generateJwtToken(user.id, env.JWT_SECRET);
+		saveJwtCookie(c, jwtToken);
 
-    return c.json(
-      {
-        userID: user._id.toHexString(),
-        fullName: user.fullName,
-        email: user.email,
-        profilePic: user.profilePic,
-        createdAt: user.createdAt,
-      },
-      201
-    );
-  } catch (error) {
-    console.error(error);
+		return c.json(
+			{
+				userID: user._id.toHexString(),
+				fullName: user.fullName,
+				email: user.email,
+				profilePic: user.profilePic,
+				createdAt: user.createdAt,
+			},
+			201,
+		);
+	} catch (error) {
+		console.error(error);
 
-    return c.json({ message: "Internal server error" }, 500);
-  }
+		return c.json({ message: "Internal server error" }, 500);
+	}
 });
 
 authRoutes.post("/logout", (c) => {
-  try {
-    deleteJwtCookie(c);
-    return c.json({ message: "Logged out successfully" }, 200);
-  } catch (error) {
-    console.error("Error in logout", error);
-    return c.json({ message: "Internal Server Error" }, 500);
-  }
+	try {
+		deleteJwtCookie(c);
+		return c.json({ message: "Logged out successfully" }, 200);
+	} catch (error) {
+		console.error("Error in logout", error);
+		return c.json({ message: "Internal Server Error" }, 500);
+	}
 });
 
 const updateProfileSchema = z.object({
-  profilePic: z.string(),
+	profilePic: z.string(),
 });
 
 authRoutes.put(
-  "/update-profile",
-  protectRoute,
-  zValidator("json", updateProfileSchema),
-  async (c) => {
-    const { userID } = c.var.user;
-    const { profilePic } = c.req.valid("json");
+	"/update-profile",
+	protectRoute,
+	zValidator("json", updateProfileSchema),
+	async (c) => {
+		const { userID } = c.var.user;
+		const { profilePic } = c.req.valid("json");
 
-    try {
-      const uploadResponse = await cloudinary.uploader.upload(profilePic, { image_metadata: true });
-      const updatedUser = await User.findByIdAndUpdate(
-        userID,
-        {
-          profilePic: uploadResponse.secure_url,
-        },
-        { new: true }
-      ).exec();
+		try {
+			const uploadResponse = await cloudinary.uploader.upload(profilePic, { image_metadata: true });
+			const updatedUser = await User.findByIdAndUpdate(
+				userID,
+				{
+					profilePic: uploadResponse.secure_url,
+				},
+				{ new: true },
+			).exec();
 
-      return c.json(updatedUser, 200);
-    } catch (error) {
-      console.log("error in update profile: ", error);
-      return c.json({ message: "Internal Server Error" }, 500);
-    }
-  }
+			return c.json(updatedUser, 200);
+		} catch (error) {
+			console.log("error in update profile: ", error);
+			return c.json({ message: "Internal Server Error" }, 500);
+		}
+	},
 );
 
 authRoutes.get("/check", protectRoute, (c) => {
-  return c.json({ ...c.get("user") }, 200);
+	return c.json({ ...c.get("user") }, 200);
 });
 
 export default authRoutes;

@@ -6,31 +6,31 @@ import env from "./env.js";
 const COOKIE_NAME = "token";
 
 export const generateJwtToken = (userId: string, jwtSecret: string) => {
-  const token = jwt.sign({ sub: userId }, jwtSecret, { expiresIn: "7d" });
+	const token = jwt.sign({ sub: userId }, jwtSecret, { expiresIn: "7d" });
 
-  return token;
+	return token;
 };
 
 /**
  * @throws error if token is invalid
  */
 export const verifyAndExtractJwtUserID = (token: string, jwtSecret: string) => {
-  const payload = jwt.verify(token, jwtSecret);
+	const payload = jwt.verify(token, jwtSecret);
 
-  const userID = payload["sub"] as string;
+	const userID = payload["sub"] as string;
 
-  return userID;
+	return userID;
 };
 
 export const saveJwtCookie = (c: Context, value: string) => {
-  setCookie(c, COOKIE_NAME, value, {
-    httpOnly: true,
-    maxAge: 7 * 24 * 60 * 60,
-    sameSite: "strict",
-    secure: env.NODE_ENV !== "development",
-  });
+	setCookie(c, COOKIE_NAME, value, {
+		httpOnly: true,
+		maxAge: 7 * 24 * 60 * 60,
+		sameSite: "strict",
+		secure: env.NODE_ENV !== "development",
+	});
 };
 
 export const deleteJwtCookie = (c: Context) => {
-  return deleteCookie(c, COOKIE_NAME);
+	return deleteCookie(c, COOKIE_NAME);
 };

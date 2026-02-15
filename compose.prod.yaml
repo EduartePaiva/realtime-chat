@@ -4,19 +4,17 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
-    ports:
-      - 27017:27017
   front:
     build:
-      context: ./apps/frontend
-      dockerfile: Dockerfile
+      context: ./
+      dockerfile: caddy.Dockerfile
     depends_on:
       - mongo
       - back
   back:
     build:
       context: ./apps/frontend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.prod
     env_file:
       - ./apps/backend/.env
     depends_on:

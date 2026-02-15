@@ -1,44 +1,44 @@
 import { serve } from "@hono/node-server";
-import { Hono } from "hono";
 import dotenv from "dotenv";
-import authRoutes from "./routes/auth.route.js";
-import { connectDB } from "./lib/db.js";
-import messageRoutes from "./routes/message.route.js";
+import { Hono } from "hono";
 import { cors } from "hono/cors";
-import io from "./lib/socket.js";
+import { connectDB } from "./lib/db.js";
 import env from "./lib/env.js";
+import io from "./lib/socket.js";
+import authRoutes from "./routes/auth.route.js";
+import messageRoutes from "./routes/message.route.js";
 
 dotenv.config();
 
 const app = new Hono().basePath("/api");
 
 app.use(
-  cors({
-    origin: "http://localhost:5173",
-    allowHeaders: ["X-Custom-Header", "Upgrade-Insecure-Requests", "Content-Type"],
-    allowMethods: ["POST", "GET", "OPTIONS", "PUT"],
-    exposeHeaders: ["Content-Length", "X-Kuma-Revision"],
-    maxAge: 600,
-    credentials: true,
-  })
+	cors({
+		origin: "http://localhost:5173",
+		allowHeaders: ["X-Custom-Header", "Upgrade-Insecure-Requests", "Content-Type"],
+		allowMethods: ["POST", "GET", "OPTIONS", "PUT"],
+		exposeHeaders: ["Content-Length", "X-Kuma-Revision"],
+		maxAge: 600,
+		credentials: true,
+	}),
 );
 
 app.route("/auth", authRoutes);
 app.route("/messages", messageRoutes);
 
 app.get("/", (c) => {
-  return c.text("Hello Hono!");
+	return c.text("Hello Hono!");
 });
 
 const httpServer = serve(
-  {
-    fetch: app.fetch,
-    port: env.PORT,
-  },
-  (info) => {
-    console.log(`Server is running on http://localhost:${info.port}`);
-    connectDB();
-  }
+	{
+		fetch: app.fetch,
+		port: env.PORT,
+	},
+	(info) => {
+		console.log(`Server is running on http://localhost:${info.port}`);
+		connectDB();
+	},
 );
 
 io.attach(httpServer);

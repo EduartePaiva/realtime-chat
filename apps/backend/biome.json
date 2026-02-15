@@ -1,0 +1,30 @@
+{
+	"$schema": "https://biomejs.dev/schemas/2.3.15/schema.json",
+	"root": false,
+	"extends": "//",
+	"files": {
+		"ignoreUnknown": false
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"style": {
+				"noProcessEnv": "error"
+			},
+			"recommended": true
+		}
+	},
+	"javascript": {
+		"formatter": {
+			"quoteStyle": "double"
+		}
+	},
+	"assist": {
+		"enabled": true,
+		"actions": {
+			"source": {
+				"organizeImports": "on"
+			}
+		}
+	}
+}

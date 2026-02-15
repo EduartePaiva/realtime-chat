@@ -5,105 +5,112 @@ import { AxiosError } from "axios";
 import { useAuthStore } from "./use-auth-store";
 
 type User = {
-  _id: string;
-  fullName: string;
-  email: string;
-  profilePic: string;
+	_id: string;
+	fullName: string;
+	email: string;
+	profilePic: string;
 };
 
 type MessageData = {
-  _id: string;
-  text?: string | null;
-  image?: string | null;
-  senderId: string;
-  receiverId: string;
-  createdAt: string;
+	_id: string;
+	text?: string | null;
+	image?: string | null;
+	senderId: string;
+	receiverId: string;
+	createdAt: string;
 };
 
 type ChatStore = {
-  messages: MessageData[];
-  users: User[];
-  selectedUser: null | User;
-  isUsersLoading: boolean;
-  isMessagesLoading: boolean;
+	messages: MessageData[];
+	users: User[];
+	selectedUser: null | User;
+	isUsersLoading: boolean;
+	isMessagesLoading: boolean;
 
-  getUsers: () => Promise<void>;
-  getMessages: (userId: string) => Promise<void>;
-  setSelectedUser: (user: User | null) => void;
-  sendMessage: (messageData: { image?: File | null; text?: string | null }) => Promise<void>;
-  subscribeToMessages: () => void;
-  unsubscribeFromMessages: () => void;
+	getUsers: () => Promise<void>;
+	getMessages: (userId: string) => Promise<void>;
+	setSelectedUser: (user: User | null) => void;
+	sendMessage: (messageData: {
+		image?: File | null;
+		text?: string | null;
+	}) => Promise<void>;
+	subscribeToMessages: () => void;
+	unsubscribeFromMessages: () => void;
 };
 
 export const useChatStore = create<ChatStore>((set, get) => ({
-  messages: [],
-  users: [],
-  selectedUser: null,
-  isUsersLoading: false,
-  isMessagesLoading: false,
+	messages: [],
+	users: [],
+	selectedUser: null,
+	isUsersLoading: false,
+	isMessagesLoading: false,
 
-  getUsers: async () => {
-    set({ isMessagesLoading: true });
-    try {
-      const res = await axiosInstance.get("/messages/users");
-      set({ users: res.data });
-    } catch (error) {
-      if (error instanceof AxiosError && error.response) {
-        toast.error(error.response.data.message);
-      } else {
-        console.error(error);
-        toast.error("Failed to load users");
-      }
-    } finally {
-      set({ isMessagesLoading: false });
-    }
-  },
-  getMessages: async (userId) => {
-    set({ isMessagesLoading: true });
-    try {
-      const res = await axiosInstance.get(`/messages/${userId}`);
-      set({ messages: res.data });
-    } catch (error) {
-      if (error instanceof AxiosError && error.response) {
-        toast.error(error.response.data.message);
-      } else {
-        console.error(error);
-        toast.error("Failed to load messages");
-      }
-    } finally {
-      set({ isMessagesLoading: false });
-    }
-  },
-  setSelectedUser: (user) => set({ selectedUser: user }),
-  sendMessage: async (messageData) => {
-    const { selectedUser, messages } = get();
-    try {
-      const res = await axiosInstance.post(`/messages/send/${selectedUser?._id}`, messageData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-      set({ messages: [...messages, res.data] });
-    } catch (error) {
-      if (error instanceof AxiosError && error.response) {
-        toast.error(error.response.data.message);
-      } else {
-        console.error(error);
-        toast.error("Failed to send messages");
-      }
-    }
-  },
-  subscribeToMessages: () => {
-    const { selectedUser } = get();
-    if (!selectedUser) return;
+	getUsers: async () => {
+		set({ isMessagesLoading: true });
+		try {
+			const res = await axiosInstance.get("/messages/users");
+			set({ users: res.data });
+		} catch (error) {
+			if (error instanceof AxiosError && error.response) {
+				toast.error(error.response.data.message);
+			} else {
+				console.error(error);
+				toast.error("Failed to load users");
+			}
+		} finally {
+			set({ isMessagesLoading: false });
+		}
+	},
+	getMessages: async (userId) => {
+		set({ isMessagesLoading: true });
+		try {
+			const res = await axiosInstance.get(`/messages/${userId}`);
+			set({ messages: res.data });
+		} catch (error) {
+			if (error instanceof AxiosError && error.response) {
+				toast.error(error.response.data.message);
+			} else {
+				console.error(error);
+				toast.error("Failed to load messages");
+			}
+		} finally {
+			set({ isMessagesLoading: false });
+		}
+	},
+	setSelectedUser: (user) => set({ selectedUser: user }),
+	sendMessage: async (messageData) => {
+		const { selectedUser, messages } = get();
+		try {
+			const res = await axiosInstance.post(
+				`/messages/send/${selectedUser?._id}`,
+				messageData,
+				{
+					headers: { "Content-Type": "multipart/form-data" },
+				},
+			);
+			set({ messages: [...messages, res.data] });
+		} catch (error) {
+			if (error instanceof AxiosError && error.response) {
+				toast.error(error.response.data.message);
+			} else {
+				console.error(error);
+				toast.error("Failed to send messages");
+			}
+		}
+	},
+	subscribeToMessages: () => {
+		const { selectedUser } = get();
+		if (!selectedUser) return;
 
-    const socket = useAuthStore.getState().socket;
+		const socket = useAuthStore.getState().socket;
 
-    socket?.on("newMessage", (newMessage) => {
-      if (newMessage.senderId !== selectedUser._id) return;
-      set({ messages: [...get().messages, newMessage] });
-    });
-  },
-  unsubscribeFromMessages: () => {
-    const socket = useAuthStore.getState().socket;
-    socket?.off("newMessage");
-  },
+		socket?.on("newMessage", (newMessage) => {
+			if (newMessage.senderId !== selectedUser._id) return;
+			set({ messages: [...get().messages, newMessage] });
+		});
+	},
+	unsubscribeFromMessages: () => {
+		const socket = useAuthStore.getState().socket;
+		socket?.off("newMessage");
+	},
 }));
