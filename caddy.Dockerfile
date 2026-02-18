@@ -1,19 +1,18 @@
-FROM node:24-slim AS base
+FROM node:24-slim AS front
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
-COPY . /app
+COPY ./apps/frontend /app
 WORKDIR /app
 
-FROM base as prod-deps
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile
-
-FROM base AS build
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 RUN pnpm run build
 
-FROM base
-COPY --from=prod-deps /app/node_modules /app/node_modules
-COPY --from=build /app/dist /app/dist
-EXPOSE 5001
-CMD [ "pnpm", "start" ]
+FROM caddy:2-alpine AS caddy
+
+COPY ./Caddyfile ./app
+COPY --from=front /app/dist /app/dist
+WORKDIR /app
+RUN caddy adapt
+CMD [ "caddy", "run" ]
+ 
