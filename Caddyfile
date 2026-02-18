@@ -5,6 +5,10 @@
 		reverse_proxy back:5001
 	}
 
+	handle /socket.io* {
+		reverse_proxy back:5001
+	}
+
 	handle {
 		root * /var/www/html
 		try_files {path} /index.html
