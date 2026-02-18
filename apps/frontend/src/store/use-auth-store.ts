@@ -29,8 +29,6 @@ type AuthStore = {
 	disconnectSocket: () => Promise<void>;
 };
 
-const BASE_URL = "http://localhost:5001";
-
 export const useAuthStore = create<AuthStore>((set, get) => ({
 	authUser: null,
 	isSigningUp: false,
@@ -126,7 +124,7 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
 		const { authUser } = get();
 		if (!authUser || get().socket?.connected) return;
 
-		const socket = io(BASE_URL, {
+		const socket = io(import.meta.env.VITE_API_URL, {
 			query: {
 				userID: authUser.userID,
 			},

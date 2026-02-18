@@ -1,21 +1,25 @@
 services:
   mongo:
     image: mongo:8.2.2-rc0-noble
+    command: mongod --quiet
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
-  front:
+  caddy:
     build:
       context: ./
       dockerfile: caddy.Dockerfile
-    depends_on:
-      - mongo
-      - back
+    ports:
+      - 8080:80
   back:
     build:
-      context: ./apps/frontend
+      context: ./apps/backend
       dockerfile: Dockerfile.prod
     env_file:
       - ./apps/backend/.env
+    environment:
+      - MONGODB_URI=mongodb://root:example@mongo:27017/realtime-chat?authSource=admin
+      - PORT=5001
+      - JWT_SECRET=not_a_secret
     depends_on:
       - mongo

@@ -5,14 +5,16 @@ RUN corepack enable
 COPY ./apps/frontend /app
 WORKDIR /app
 
+ENV VITE_API_URL=""
+
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 RUN pnpm run build
 
-FROM caddy:2-alpine AS caddy
+FROM caddy:2.11-alpine AS caddy
 
-COPY ./Caddyfile ./app
-COPY --from=front /app/dist /app/dist
+COPY Caddyfile /app/
+COPY --from=front /app/dist /var/www/html
 WORKDIR /app
-RUN caddy adapt
+RUN caddy adapt --config Caddyfile --validate
 CMD [ "caddy", "run" ]
  
