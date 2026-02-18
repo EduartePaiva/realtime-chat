@@ -11,6 +11,8 @@ services:
       dockerfile: caddy.Dockerfile
     ports:
       - 8080:80
+    environment:
+      - SERVER_ADDRESS=back:5001
   back:
     build:
       context: ./apps/backend

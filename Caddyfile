@@ -2,11 +2,11 @@
 	encode gzip
 
 	handle /api* {
-		reverse_proxy back:5001
+		reverse_proxy {$SERVER_ADDRESS}
 	}
 
 	handle /socket.io* {
-		reverse_proxy back:5001
+		reverse_proxy {$SERVER_ADDRESS}
 	}
 
 	handle {
