@@ -1,4 +1,5 @@
 import { config } from "dotenv";
+import mongoose from "mongoose";
 import { connectDB } from "../lib/db.js";
 import User from "../models/user.model.js";
 
@@ -108,6 +109,8 @@ const seedDatabase = async () => {
 		console.log("Database seeded successfully");
 	} catch (error) {
 		console.error("Error seeding database:", error);
+	} finally {
+		await mongoose.connection.close();
 	}
 };
 

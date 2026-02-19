@@ -6,7 +6,7 @@ COPY ./apps/frontend /app
 WORKDIR /app
 
 ENV VITE_API_URL=""
-
+ENV CI=true
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 RUN pnpm run build
 

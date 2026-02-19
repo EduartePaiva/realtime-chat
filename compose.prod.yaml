@@ -1,10 +1,12 @@
 services:
   mongo:
-    image: mongo:8.2.2-rc0-noble
+    image: mongo:8.2.5-noble
     command: mongod --quiet
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
+    ports:
+      - 27017:27017
   caddy:
     build:
       context: ./

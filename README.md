@@ -1,8 +1,7 @@
-# Readme In Progress
+# Realtime Chat (Chatty)
+![Initial Page](./readme_assets/initial_page.png "Initial page")
 
-# Realtime Chat
-
-Realtime Chat is an instant chat message application that allows to communicate in real time and share images.
+Chatty is an instant chat message application that allows to communicate in real time and share images.
 
 # Technologies 
 - Typescript
@@ -31,19 +30,36 @@ Realtime Chat is an instant chat message application that allows to communicate 
 - Dependency
     - Docker+Docker Compose
 
-- setup environment variables following .env.example in /apps/backend
-
 - build project
-    > /docker compose build -f compose.prod.yaml
+    > /docker compose -f compose.prod.yaml build
 
 - run project
-    > /docker compose up -f compose.prod.yaml
+    > /docker compose -f compose.prod.yaml up
 
-- for image uploading you would need to setup Cloudinary env variables, check out Cloudinary [documentation](https://cloudinary.com/documentation)
+- visit [http://localhost:8080](http://localhost:8080)
 
-  ## Authors
+- for image uploading capability you need to setup Cloudinary env variables as shown in .env.example in the apps/backend folder, check out Cloudinary [documentation](https://cloudinary.com/documentation)
 
- **Eduarte Paiva** 
+# Images
+- Initial Page
+![Initial Page](./readme_assets/initial_page.png "Initial page")
 
-  Please follow github and join us!
-  Thanks to visiting me and good coding!
+- Chat Page 
+![Chat Page](./readme_assets/chat_page.png "Chat Page")
+
+- Profile Page
+![profile Page](./readme_assets/profile_page.png "profile Page")
+
+- Settings Page
+![settings Page](./readme_assets/settings_page.png "settings Page")
+
+- Login Page
+![login Page](./readme_assets/login_page.png "login Page")
+
+
+# Authors
+
+**Eduarte Paiva** 
+
+Please follow github and join us!  
+Thanks to visiting me and good coding!
