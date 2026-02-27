@@ -63,3 +63,6 @@ Chatty is an instant chat message application that allows to communicate in real
 
 Please follow github and join us!  
 Thanks to visiting me and good coding!
+
+# License
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
